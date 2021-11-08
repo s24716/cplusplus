@@ -3,6 +3,11 @@
 #include <string>
 #include "../include/s42/Time.h"
 
+Time::Time(int h, int m, int s) {
+    hour = h;
+    minute = m;
+    second = s;
+}
 auto Time::next_hour() -> void {
     if ( hour < 23 ){
         hour ++;
@@ -47,8 +52,7 @@ auto Time::to_string() const -> std::string{
     //code above was made to transform 0:0:0 format to 00:00:00 =]
 
     auto result = std::ostringstream{};
-    result << "Aktualny czas : " 
-        << hours << " : " 
+    result << hours << " : " 
         << minutes << " : "
         << seconds;
     return result.str();
@@ -83,21 +87,47 @@ auto Time::time_of_day() const -> Time_of_day {
 	}
 }
 
- auto Time::operator+ (Time const& o) const -> Time {
-		int h = hour;
-		int m = minute;
-		int s = second;
+auto Time::operator+ (Time const& o) const -> Time {
+        int h = hour;
+        int m = minute;
+        int s = second;
+        s += o.second;
+        if(s > 59) {
+            s -= 60;
+            m++;
+        }
+        m += o.minute;
+        if(m > 59) {
+            m -= 60;
+            h++;
+        }
+        h += o.hour;
+        if(h > 23){
+            h -= 24;
+        }
+        return Time(h, m, s);
+    }
 
-		s += o.second;
-		if(s>59){ s-= 60; m++;};
-		m += o.minute;
-		if(m>59){ m-= 60; h++;};
-		h += o.hour;
-		if(h>23){h-=24;};
-		return Time(h, m, s);
-	
-	
- }
+auto Time::operator- (Time const& o) const -> Time {
+        short h = hour;
+        short m = minute;
+        short s = second;
+        s -= o.second;
+        if(s < 0) {
+            s += 60;
+            m--;
+        }
+        m -= o.minute;
+        if(m < 0) {
+            m += 60;
+            h--;
+        }
+        h -= o.hour;
+        if(h < 0){
+            h += 24;
+        }
+        return Time(h, m, s);
+    }
 
 
  auto Time::operator< (Time const& o) const -> bool {
@@ -140,12 +170,45 @@ auto Time::time_of_day() const -> Time_of_day {
         return !(hour==o.hour && minute==o.minute&&second==o.second);
     }
 
+auto Time::count_seconds() const -> std::uint64_t {
+        std::uint64_t count = 0;
+        count += hour * 60 * 60;
+        count += minute * 60;
+        count += second;
+        return count;
+}
+
+auto Time::count_minutes() const -> std::uint64_t {
+        std::uint64_t count = 0;
+        count += hour * 60;
+        count += minute;
+        return count;
+}
+
+auto Time::time_to_midnight() const -> Time {
+        Time time;
+        time.second = 60 - second;
+
+        if(time.second > 0)
+            time.minute = 59 - minute;
+        else
+            time.minute = 60 - minute;
+
+        if(time.minute > 0)
+            time.hour = 23 - hour;
+        else
+            time.minute = 24 - hour;
+
+        return time;
+}
 
 auto main() -> int {
-    auto time = Time(23, 59, 59);
+    auto time = Time(22, 30, 35);
+    auto add = time + Time(1, 0, 30);
+    auto substract = time - Time(5, 12, 30);
 
-
-    std::cout<<time.to_string() << "\n";
+    std::cout<<add.to_string() << "\n";
+    std::cout<<substract.to_string() << "\n";
 
     time.next_second();
 
@@ -153,6 +216,10 @@ auto main() -> int {
 
     time.next_minute();
 
+    std::cout << "sekundy: " << time.count_seconds() << "\n";
+    std::cout << "minuty: " << time.count_minutes() << "\n";
+    std::cout << "Czas do polnocy : " << time.time_to_midnight().to_string() << "\n";
+    
     std::cout<<time.to_string() << "\n";
 
 	std::cout<<time.to_string(time.time_of_day()) << "\n";

@@ -2,9 +2,9 @@
 #include <string>
 
 struct Time {
-    int hour = {0};
-    int minute = {0};
-    int second = {0};
+    int hour = 0;
+    int minute = 0;
+    int second = 0;
 
 	enum Time_of_day {
 		rano,
@@ -12,6 +12,7 @@ struct Time {
 		wieczor,
 		noc
 	};
+	Time() = default;
 	Time(int, int, int);
     auto to_string() const -> std::string;
     auto to_string(Time_of_day) const -> std::string;
@@ -25,6 +26,9 @@ struct Time {
 	auto operator > ( Time const &) const -> bool;
 	auto operator == ( Time const &) const -> bool;
 	auto operator != ( Time const &) const -> bool;
+	auto count_seconds() const -> uint64_t; 
+	auto count_minutes() const -> uint64_t; 
+	auto time_to_midnight() const -> Time;
 
 
 
