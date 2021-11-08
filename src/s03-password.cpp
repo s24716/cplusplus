@@ -12,20 +12,15 @@ auto main(int argc, char* argv[]) -> int{
     if (argc == 0){
         return 1;
     }
-    auto const login = std::string{argv[1]};
-    if (login == "student"){
-        auto const password = std::string{"student"};
-        std::string passTyped = ""; 
-        do{
-            passTyped = getValue("");
+    auto const password = std::string{argv[1]};
+        std::string passTyped = "";
+    do{
+        passTyped = getValue("");
             if(passTyped==password){
                 std::cout<<"Pomysle logowanie \n";
             }
-        }
-        while(password!=passTyped);
-            
-        
-        
-    }
+    }while(password!=passTyped);
+
+
     return 0;
 }
