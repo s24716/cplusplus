@@ -29,6 +29,37 @@ struct Print : public Element {
 struct Addition : public Element {
     auto evaluate(stack_type&) const -> void override;
 };
+struct Subtraction : public Element {
+    auto evaluate(stack_type&) const -> void override;
+};
+
+struct Multiplying : public Element {
+    auto evaluate(stack_type&) const -> void override;
+};
+
+struct Dividing : public Element {
+    auto evaluate(stack_type&) const -> void override;
+};
+
+struct Divide_Whole_Numbers : public Element {
+    auto evaluate(stack_type&) const -> void override;
+};
+
+struct Modulo : public Element {
+    auto evaluate(stack_type&) const -> void override;
+};
+
+struct Power : public Element {
+    auto evaluate(stack_type&) const -> void override;
+};
+
+struct Root : public Element {
+    auto evaluate(stack_type&) const -> void override;
+};
+
+struct Triangle_Area : public Element {
+    auto evaluate(stack_type&) const -> void override;
+};
 
 struct Calculator {
     stack_type stack;
